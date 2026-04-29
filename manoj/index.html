@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fit Manoj - Your Fitness Journey</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header */
+        header {
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(10px);
+            padding: 1rem 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 2rem;
+            font-weight: bold;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: #ff6b6b;
+        }
+
+        .mobile-menu {
+            display: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 120px 0 80px;
+            text-align: center;
+            color: white;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            color: white;
+            padding: 15px 40px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1.1rem;
+            transition: transform 0.3s, box-shadow 0.3s;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.4);
+        }
+
+        /* Sections */
+        section {
+            padding: 80px 0;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 3rem;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        /* Progress Tracker */
+        .progress-tracker {
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            margin: 20px 0;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+        }
+
+        .progress-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .progress-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .progress-input-group {
+            margin-bottom: 1rem;
+        }
+
+        .progress-input-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .progress-input-group input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        .progress-input-group input:focus {
+            outline: none;
+            border-color: #4ecdc4;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 20px;
+            background: #e0e0e0;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 1rem 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #ff6b6b, #4ecdc4);
+            width: 0%;
+            transition: width 0.5s ease;
+            border-radius: 10px;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 300px;
+            margin-top: 2rem;
+        }
+
+        /* Diet Planner */
+        .diet-planner {
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            margin: 20px 0;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+        }
+
+        .diet-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .meal-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+
+        .meal-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .meal-header {
+            font-weight: bold;
+            margin-bottom: 1rem;
+            color: #333;
+        }
+
+        .nutrition-info {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 1rem;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .calculate-btn {
+            background: linear-gradient(45deg, #4ecdc4, #44a08d);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 25px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin: 10px 5px;
+        }
+
+        .calculate-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+
+        /* Stats Display */
+        .stats-display {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 2rem;
+            border-radius: 15px;
+            text-align: center;
+            margin-top: 2rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+            
+            .mobile-menu {
+                display: block;
+            }
+            
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .progress-grid,
+            .diet-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in-up {
+            animation: fadeInUp 0.8s ease forwards;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="container">
+            <div class="logo">FitManoj</div>
+            <ul class="nav-links">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#progress">Progress</a></li>
+                <li><a href="#diet">Diet</a></li>
+                <li><a href="#about">About</a></li>
+            </ul>
+            <div class="mobile-menu">
+                <i class="fas fa-bars"></i>
+            </div>
+        </nav>
+    </header>
+
+    <section id="home" class="hero">
+        <div class="container">
+            <h1 class="fade-in-up">Transform Your Body</h1>
+            <p class="fade-in-up" style="animation-delay: 0.2s;">Track your progress • Plan your diet • Achieve your goals</p>
+            <a href="#progress" class="cta-button fade-in-up" style="animation-delay: 0.4s;">Start Your Journey</a>
+        </div>
+    </section>
+
+    <section id="progress" class="container">
+        <h2 class="section-title">Progress Tracker</h2>
+        <div class="progress-tracker fade-in-up">
+            <div class="progress-grid">
+                <div class="progress-card">
+                    <div class="progress-input-group">
+                        <label>Current Weight (kg)</label>
+                        <input type="number" id="currentWeight" placeholder="75" step="0.1">
+                    </div>
+                    <div class="progress-input-group">
+                        <label>Goal Weight (kg)</label>
+                        <input type="number" id="goalWeight" placeholder="70" step="0.1">
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="weightProgress"></div>
+                    </div>
+                    <div style="font-size: 1.2rem; font-weight: bold; margin-top: 1rem;">
+                        <span id="weightProgressText">0%</span> to Goal
+                    </div>
+                </div>
+
+                <div class="progress-card">
+                    <div class="progress-input-group">
+                        <label>Body Fat %</label>
+                        <input type="number" id="currentBodyFat" placeholder="20" step="0.1">
+                    </div>
+                    <div class="progress-input-group">
+                        <label>Goal Body Fat %</label>
+                        <input type="number" id="goalBodyFat" placeholder="15" step="0.1">
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="bodyFatProgress"></div>
+                    </div>
+                    <div style="font-size: 1.2rem; font-weight: bold; margin-top: 1rem;">
+                        <span id="bodyFatProgressText">0%</span> to Goal
+                    </div>
+                </div>
+
+                <div class="progress-card">
+                    <button class="calculate-btn" onclick="updateProgress()">Update Progress</button>
+                    <button class="calculate-btn" onclick="addProgressEntry()">Add Entry</button>
+                </div>
+            </div>
+
+            <div class="chart-container">
+                <canvas id="progressChart"></canvas>
+            </div>
+
+            <div class="stats-display">
+                <h3>Weekly Summary</h3>
+                <p>Total Weight Lost: <span id="totalWeightLost">0 kg</span></p>
+                <p>Entries Recorded: <span id="totalEntries">0</span></p>
+            </div>
+        </div>
+    </section>
+
+    <section id="diet" class="container">
+        <h2 class="section-title">Diet Planner</h2>
+        <div class="diet-planner fade-in-up">
+            <div class="progress-input-group" style="max-width: 300px; margin: 0 auto 2rem;">
+                <label>Daily Calorie Goal</label>
+                <input type="number" id="dailyCalories" placeholder="2500" step="50">
+                <small>Adjust based on your goals (weight loss/maintenance/gain)</small>
+            </div>
+
+            <div class="diet-grid">
+                <div class="meal-card">
+                    <div class="meal-header">🥚 Breakfast</div>
+                    <div class="nutrition-info">
+                        <span>Calories: <span id="breakfastCals">0</span></span>
+                        <span>Protein: <span id="breakfastProtein">0g</span></span>
+                    </div>
+                    <input type="text" placeholder="Add breakfast..." id="breakfastInput" style="width: 100%; margin-top: 1rem; padding: 10px; border: 1px solid #e0e0e0; border-radius: 8px;">
+                </div>
+
+                <div class="meal-card">
+                    <div class="meal-header">🍗 Lunch</div>
+                    <div class="nutrition-info">
+                        <span>Calories: <span id="lunchCals">0</span></span>
+                        <span>Protein: <span id="lunchProtein">0g</span></span>
+                    </div>
+                    <input type="text" placeholder="Add lunch..." id="lunchInput" style="width: 100%; margin-top: 1rem; padding: 10px; border: 1px solid #e0e0e0; border-radius: 8px;">
+                </div>
+
+                <div class="meal-card">
+                    <div class="meal-header">🍽️ Dinner</div>
+                    <div class="nutrition-info">
+                        <span>Calories: <span id="dinnerCals">0</span></span>
+                        <span>Protein: <span id="dinnerProtein">0g</span></span>
+                    </div>
+                    <input type="text" placeholder="Add dinner..." id="dinnerInput" style="width: 100%; margin-top: 1rem; padding: 10px; border: 1px solid #e0e0e0; border-radius: 8px;">
+                </div>
+
+                <div class="meal-card">
+                    <div class="meal-header">🍫 Snacks</div>
+                    <div class="nutrition-info">
+                        <span>Calories: <span id="snackCals">0</span></span>
+                        <span>Protein: <span id="snackProtein">0g</span></span>
+                    </div>
+                    <input type="text" placeholder="Add snacks..." id="snackInput" style="width: 100%; margin-top: 1rem; padding: 10px; border: 1px solid #e0e0e0; border-radius: 8px;">
+                </div>
+            </div>
+
+            <div style="text-align: center; margin-top: 2rem;">
+                <button class="calculate-btn" onclick="calculateDiet()">Calculate Nutrition</button>
+                <button class="calculate-btn" onclick="saveDietPlan()">Save Diet Plan</button>
+            </div>
+
+            <div class="stats-display" id="dietSummary" style="display: none;">
+                <h3>Daily Summary</h3>
+                <div style="display: flex; justify-content: space-around; flex-wrap: wrap; gap: 1rem;">
+                    <div>Total Calories: <span id="totalCalories">0</span> / <span id="calorieGoal">0</span></div>
+                    <div>Total Protein: <span id="totalProtein">0g</span></div>
+                    <div>Remaining: <span id="caloriesRemaining">0</span> cal</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // Progress Tracker Data
+        let progressData = [];
+        let progressChart = null;
+
+        // Initialize Chart
+        function initChart() {
+            const ctx = document.getElementById('progressChart').getContext('2d');
+            progressChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: [],
+                    datasets: [{
+                        label: 'Weight (kg)',
+                        data: [],
+                        borderColor: '#ff6b6b',
+                        backgroundColor: 'rgba(255, 107, 107, 0.1)',
+                        tension: 0.4,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: false
+                        }
+                    }
+                }
+            });
+        }
+
+        // Update Progress Bars
+        function updateProgress() {
+            const currentWeight = parseFloat(document.getElementById('currentWeight').value) || 0;
+            const goalWeight = parseFloat(document.getElementById('goalWeight').value) || 0;
+            const currentBodyFat = parseFloat(document.getElementById('currentBodyFat').value) || 0;
+            const goalBodyFat = parseFloat(document.getElementById('goalBodyFat').value) || 0;
+
+            // Weight progress
+            const weightProgress = goalWeight > currentWeight ? 
+                Math.min(100, ((goalWeight - currentWeight) / (goalWeight - 75)) * 100) : 100;
+            document.getElementById('weightProgress').style.width = weightProgress + '%';
+            document.getElementById('weightProgressText').textContent = Math.round(weightProgress) + '%';
+
+            // Body fat progress
+            const bodyFatProgress = Math.min(100, ((currentBodyFat - goalBodyFat) / (20 - goalBodyFat)) * 100);
+            document.getElementById('bodyFatProgress').style.width = bodyFatProgress + '%';
+            document.getElementById('bodyFatProgressText').textContent = Math.round(bodyFatProgress) + '%';
+        }
+
+        // Add Progress Entry
+        function addProgressEntry() {
+            const weight = parseFloat(document.getElementById('currentWeight').value) || 0;
+            const date = new Date().toLocaleDateString();
+            
+            progressData.push({ date, weight });
+            document.getElementById('totalEntries').textContent = progressData.length;
+            
+            // Update chart
+            progressChart.data.labels = progressData.map(d => d.date);
+            progressChart.data.datasets[0].data = progressData.map(d => d.weight);
+            progressChart.update();
+
+            // Calculate total weight lost
+            if (progressData.length > 1) {
+                const totalLost = progressData[0].weight - weight;
+                document.getElementById('totalWeightLost').textContent = totalLost.toFixed(1) + ' kg';
+            }
+
+            // Save to localStorage
+            localStorage.setItem('progressData', JSON.stringify(progressData));
+        }
+
+        // Diet Planner
+        const mealNutrition = {
+            breakfast: { calories: 0, protein: 0 },
+            lunch: { calories: 0, protein: 0 },
+            dinner: { calories: 0, protein: 0 },
+            snack: { calories: 0, protein: 0 }
+        };
+
+        function calculateDiet() {
+            // Simple nutrition estimation based on common meals
+            // In a real app, this would connect to a nutrition API
+            const meals = ['breakfast', 'lunch', 'dinner', 'snack'];
+            let totalCalories = 0;
+            let totalProtein = 0;
+
+            meals.forEach(meal => {
+                const input = document.getElementById(meal + 'Input').value.toLowerCase();
+                let cals = 0, prot = 0;
+
+                if (input.includes('egg') || input.includes('omelette')) {
+                    cals = 300; prot = 25;
+                } else if (input.includes('chicken') || input.includes('breast')) {
+                    cals = 500; prot = 50;
+                } else if (input.includes('rice') && input.includes('dal')) {
+                    cals = 600; prot = 20;
+                } else if (input.includes('oats') || input.includes('protein shake')) {
+                    cals = 400; prot = 30;
+                } else if (input.includes('salad') || input.includes('veggies')) {
+                    cals = 200; prot = 10;
+                } else if (input.length > 0) {
+                    cals = 400; prot = 25; // Default
+                }
+
+                mealNutrition[meal] = { calories: cals, protein: prot };
+                document.getElementById(meal + 'Cals').textContent = cals;
+                document.getElementById(meal + 'Protein').textContent = prot + 'g';
+
+                totalCalories += cals;
+                totalProtein += prot;
+            });
+
+            const calorieGoal = parseInt(document.getElementById('dailyCalories').value) || 2500;
+            const remaining = calorieGoal - totalCalories;
+
+            document.getElementById('totalCalories').textContent = totalCalories;
+            document.getElementById('calorieGoal').textContent = calorieGoal;
+            document.getElementById('totalProtein').textContent = totalProtein + 'g';
+            document.getElementById('caloriesRemaining').textContent = remaining;
+            document.getElementById('dietSummary').style.display = 'block';
+
+            // Save diet plan
+            localStorage.setItem('dietPlan', JSON.stringify({
+                date: new Date().toLocaleDateString(),
+                totalCalories,
+                totalProtein,
+                calorieGoal,
+                meals: mealNutrition
+            }));
+        }
+
+        function saveDietPlan() {
+            alert('Diet plan saved! Check back tomorrow to track consistency.');
+        }
+
+        // Load saved data on page load
+        function loadSavedData() {
+            const savedProgress = localStorage.getItem('progressData');
+            if (savedProgress) {
+                progressData = JSON.stringify(savedProgress);
+                document.getElementById('totalEntries').textContent = progressData.length;
+            }
+
+            const savedDiet = localStorage.getItem('dietPlan');
+            if (savedDiet) {
+                const diet = JSON.parse(savedDiet);
+                document.getElementById('dailyCalories').value = diet.calorieGoal;
+            }
+        }
+
+        // Smooth scrolling for navigation
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // Initialize everything
+        window.addEventListener('load', () => {
+            initChart();
+            loadSavedData();
+            updateProgress();
+        });
+
+        // Auto-save progress every 30 seconds
+        setInterval(() => {
+            if (document.getElementById('currentWeight').value) {
+                updateProgress();
+            }
+        }, 30000);
+    </script>
+</body>
+</html>
